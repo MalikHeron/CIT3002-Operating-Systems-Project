@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class Driver {
     public static void main(String[] args) {
         Resource sharedResource = new Resource();
+        sharedResource.initializeResourceList();
         ArrayList<Pairs> resourceList = sharedResource.getResourceList();
 
         System.out.println("Initial Resource List:");

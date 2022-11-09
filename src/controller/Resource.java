@@ -11,10 +11,9 @@ public class Resource {
 
     public Resource() {
         resourceList = new ArrayList<>();
-        initializeResourceList();
     }
 
-    private void initializeResourceList() {
+    public void initializeResourceList() {
         for (int index = 0; index < 20; index++) {
             Pairs resource = new Pairs((index + 1), random.nextInt(100) + 1);
             resourceList.add(resource);
