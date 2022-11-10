@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="805de947-1b32-442b-a3b7-615ed8b3a2d0" name="Changes" comment="updated classes">
-      <change beforePath="$PROJECT_DIR$/src/main/Scheduling.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Scheduling.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Scheduling.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Scheduler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,8 +48,8 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="Scheduling" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="main.Scheduling" />
+    <configuration name="Scheduler" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="main.Scheduler" />
       <module name="CIT3002-Operating Systems Project" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -57,7 +57,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Scheduling" />
+        <item itemvalue="Application.Scheduler" />
       </list>
     </recent_temporary>
   </component>
@@ -72,7 +72,7 @@
       <workItem from="1667951785371" duration="798000" />
       <workItem from="1668002089571" duration="184000" />
       <workItem from="1668026173788" duration="14718000" />
-      <workItem from="1668094391851" duration="29202000" />
+      <workItem from="1668094391851" duration="29222000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <created>1667951823188</created>
@@ -158,7 +158,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668124357325</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="updated classes">
+      <created>1668124484236</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1668124484236</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
