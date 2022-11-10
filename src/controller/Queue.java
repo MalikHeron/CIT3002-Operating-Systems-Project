@@ -20,7 +20,7 @@ public class Queue {
     }
 
     private void populateProcesses(ArrayList<Process> processList) {
-        for (Process process: processList) {
+        for (Process process : processList) {
             enqueue(process);
         }
     }

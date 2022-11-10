@@ -21,7 +21,7 @@ public class Threads {
 
     public void checkThreads() {
         if (threads.removeIf(thread -> !thread.isAlive())) {
-            for (Thread thread: threads) {
+            for (Thread thread : threads) {
                 System.out.println("Remaining processes are on: " + thread.getName());
             }
         }

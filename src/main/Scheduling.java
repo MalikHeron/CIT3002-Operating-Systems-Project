@@ -3,6 +3,7 @@ package main;
 import controller.Queue;
 import controller.Resource;
 import controller.Threads;
+import models.Pairs;
 import models.Process;
 
 import java.util.ArrayList;
@@ -38,9 +39,13 @@ public class Scheduling {
         // Add process list to the ready queue
         Queue readyQueue = new Queue(processList);
 
+        // Object of threads for holding 2 threads on CPU
         Threads threads = new Threads();
+        // Get the next process in the ready queue
         Process readyProcess = readyQueue.dequeue();
+        // Initialize a thread
         Thread thread = new Thread();
+
         int currentTime = 0;
         int endTime = -1;
         int compareArrivalTime;
@@ -60,6 +65,7 @@ public class Scheduling {
                         // Arrivals times are the same or ready process arrived before waiting
                         Object[] objects = checkPriority(threads, readyProcess, readyQueue, compareArrivalTime);
                         readyProcess = (Process) objects[0];
+                        // Calculate end time of process
                         endTime = currentTime + (int) objects[1];
                         System.out.println("End time: " + endTime + "\n");
                     } else {
@@ -80,14 +86,6 @@ public class Scheduling {
             System.err.println(e.getMessage());
         }
 
-        // Get list of resources
-        /*ArrayList<Pairs> resourceList = sharedResource.getResourceList();
-
-        System.out.println("\nFinished Resource List:");
-        for (Pairs resource : resourceList) {
-            System.out.println("ID: " + resource.id() + ", Data: " + resource.data());
-        }*/
-
         // Sort listing by fastest start time using method reference operator
         System.out.println("\nProcess List:");
         for (Process process : processList) {
@@ -95,36 +93,55 @@ public class Scheduling {
                     ", ARRIVAL TIME: " + process.getArrivalTime() + ", BURST TIME: " + process.getBurstTime() +
                     ", BLOCKED TIME: " + process.getBlockedTime());
         }
+
+        // Get list of resources
+        ArrayList<Pairs> resourceList = sharedResource.getResourceList();
+
+        System.out.println("\nFinal Resource List:");
+        for (Pairs resource : resourceList) {
+            System.out.println("ID: " + resource.id() + ", Data: " + resource.data());
+        }
     }
 
     public static Object[] checkPriority(Threads threads, Process readyProcess, Queue readyQueue, int arrivalTime) {
         // Check if ready process has the higher
         int comparePriority = (readyProcess.getPriority() - readyQueue.top().getPriority());
-        int burstTime = 0;
+        int burstTime;
+        // Check if processes have different arrival times
         if (arrivalTime < 0) {
             // Ready process arrived first
             doProcessing(threads, readyProcess);
+            // Get process burst time
             burstTime = readyProcess.getBurstTime();
+            // Set readyProcess to next process in the ready queue
             readyProcess = readyQueue.dequeue();
         } else {
             if (comparePriority < 0) {
                 // Ready process has the higher priority
                 doProcessing(threads, readyProcess);
+                // Get process burst time
                 burstTime = readyProcess.getBurstTime();
+                // Set readyProcess to next process in the ready queue
                 readyProcess = readyQueue.dequeue();
             } else if (comparePriority > 0) {
                 // Next process has the higher priority
                 System.out.println("Next process has lower priority");
+                // Create a copy of readyProcess
                 Process tempProcess = readyProcess;
+                // Replace readyProcess with waiting process
                 readyProcess = readyQueue.dequeue();
                 doProcessing(threads, readyProcess);
+                // Get process burst time
                 burstTime = readyProcess.getBurstTime();
+                // Set readyProcess to copied process
                 readyProcess = tempProcess;
             } else {
                 // Priorities are the same
                 System.out.println("Same priority");
                 doProcessing(threads, readyProcess);
+                // Get process burst time
                 burstTime = readyProcess.getBurstTime();
+                // Set readyProcess to next process in the ready queue
                 readyProcess = readyQueue.dequeue();
             }
         }
@@ -138,8 +155,8 @@ public class Scheduling {
         int index = random.nextInt(4);
         boolean lock = false;
 
+        // Check if process should be given mutual exclusion to shared resource
         if (index == 0 || index == 1) {
-            // Check if process should be given mutual exclusion to shared resource
             System.out.println("Mutual exclusion to shared resource upcoming...");
             lock = true;
         }
@@ -149,20 +166,27 @@ public class Scheduling {
         // Check if shared resource lock should be locked
         if (lock) {
             int blockedTime = 0;
+
             System.out.println("Waiting on processes to finish...");
             // Allow all currently running process to finish execution
             do {
                 blockedTime++;
                 threads.checkThreads();
             } while (threads.getNumberOfThreads() != 0);
+
             System.out.println("Processes finished.");
             System.out.println("Blocked time: " + blockedTime);
+
+            // Set process blocked time
             readyProcess.setBlockedTime(blockedTime);
+
             // Lock system if no processes are running
             if (threads.getNumberOfThreads() == 0) {
                 System.out.println("Shared resource locked.");
                 System.out.println(readyProcess);
+                // Add thread to CPU
                 threads.addThread(thread);
+
                 System.out.println("Processing...");
                 // Wait until process is finished
                 do {
