@@ -11,11 +11,12 @@ public class Resource {
 
     public Resource() {
         resourceList = new ArrayList<>();
+        initializeResourceList();
     }
 
-    public void initializeResourceList() {
+    private void initializeResourceList() {
         for (int index = 0; index < 20; index++) {
-            Pairs resource = new Pairs((index + 1), random.nextInt(100) + 1);
+            Pairs resource = new Pairs((index + 1), 0);
             resourceList.add(resource);
         }
     }
@@ -26,6 +27,7 @@ public class Resource {
         int index = id - 1;
         Pairs resource = new Pairs(id, data);
         resourceList.set(index, resource);
+        System.out.println("Added record: [ID: " + resource.id() + ", Data: " + resource.data() + "]");
     }
 
     public void removeRecord() {
@@ -33,13 +35,14 @@ public class Resource {
         int index = id - 1;
         Pairs resource = new Pairs(id, 0);
         resourceList.set(index, resource);
+        System.out.println("Removed record with ID: [" + resource.id() + "]");
     }
 
     public void retrieveRecord() {
         int id = random.nextInt(20) + 1;
         int index = id - 1;
         Pairs resource = resourceList.get(index);
-        System.out.println("ID: " + resource.id() + ", Data: " + resource.data());
+        System.out.println("Retrieved record: [ID: " + resource.id() + ", Data: " + resource.data() + "]");
     }
 
     public void calculateTotalResourceData() {

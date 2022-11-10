@@ -5,7 +5,7 @@ import controller.Resource;
 import java.util.Arrays;
 import java.util.Random;
 
-public class Process {
+public class Process implements Runnable {
     private final Random random = new Random();
     private int processId;
     private Runnable[] task;
@@ -15,6 +15,7 @@ public class Process {
     private long endTime;
     private double blockedTime;
     private int burstTime;
+    private Resource resource;
 
     public Process() {
         processId = 0;
@@ -27,8 +28,21 @@ public class Process {
         burstTime = 0;
     }
 
+    public Process(int processId, Resource resource) {
+        this.resource = resource;
+        setProcessId(processId);
+        setPriority((random.nextInt(5) + 1));
+        setArrivalTime(random.nextInt(30));
+        setBurstTime((random.nextInt(5) + 1));
+        task = new Runnable[0];
+        startTime = 0L;
+        endTime = 0L;
+        blockedTime = 0.0;
+    }
+
     public Process(int processId, Runnable[] task, int priority, int arrivalTime, long startTime,
-                   long endTime, double blockedTime, int burstTime) {
+                   long endTime, double blockedTime, int burstTime, Resource resource) {
+        this.resource = resource;
         this.processId = processId;
         this.task = task;
         this.priority = priority;
@@ -103,13 +117,6 @@ public class Process {
         this.burstTime = burstTime;
     }
 
-    public void initializeProcess() {
-        setProcessId((random.nextInt(20) + 1));
-        setPriority((random.nextInt(5) + 1));
-        setArrivalTime(random.nextInt(30));
-        setBurstTime((random.nextInt(5) + 1));
-    }
-
     public void runTask(Resource resource) {
         task = new Runnable[4];
 
@@ -138,5 +145,10 @@ public class Process {
                 "\n\tblockedTime = " + blockedTime +
                 "\n\tburstTime = " + burstTime +
                 "\n}";
+    }
+
+    @Override
+    public void run() {
+        runTask(resource);
     }
 }

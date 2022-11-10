@@ -1,18 +1,28 @@
 package controller;
 
+import models.Process;
+
+import java.util.ArrayList;
+
 public class Queue {
-    private final int maxSize;
-    private final Object[] array;
+    private final int maxSize = 20;
+    private final Process[] processes;
     private int front;
     private int back;
     private int currentSize;
 
-    public Queue(int maxSize) {
-        this.maxSize = maxSize;
-        array = new Object[maxSize];
+    public Queue(ArrayList<Process> processList) {
+        processes = new Process[maxSize];
         front = 0;
         back = -1;
         currentSize = 0;
+        populateProcesses(processList);
+    }
+
+    private void populateProcesses(ArrayList<Process> processList) {
+        for (Process process: processList) {
+            enqueue(process);
+        }
     }
 
     public int getMaxSize() {
@@ -31,27 +41,27 @@ public class Queue {
         return currentSize == maxSize;
     }
 
-    public Object top() {
-        return array[front];
+    public Process top() {
+        return processes[front];
     }
 
-    public void enqueue(Object value) {
+    public void enqueue(Process process) {
         if (isFull())
             return;
 
         back = (back + 1) % maxSize; //to keep the index in range
-        array[back] = value;
+        processes[back] = process;
         currentSize++;
     }
 
-    public Object dequeue() {
+    public Process dequeue() {
         if (isEmpty())
             return null;
 
-        Object temp = array[front];
+        Process readyProcess = processes[front];
         front = (front + 1) % maxSize; //to keep the index in range
         currentSize--;
 
-        return temp;
+        return readyProcess;
     }
 }
