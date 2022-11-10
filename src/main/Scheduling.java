@@ -1,13 +1,15 @@
+package main;
+
 import controller.Queue;
 import controller.Resource;
-import controller.Scheduling;
+import controller.Threads;
 import models.Pairs;
 import models.Process;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class Driver {
+public class Scheduling {
     public static void main(String[] args) {
         Resource sharedResource = new Resource();
         ArrayList<Process> processList = new ArrayList<>();
@@ -34,21 +36,23 @@ public class Driver {
         // Add process list to the ready queue
         Queue readyQueue = new Queue(processList);
 
-        // Start process scheduling
-        Scheduling scheduling = new Scheduling();
+        Threads threads = new Threads();
         Process readyProcess = readyQueue.dequeue();
         Thread thread = new Thread();
+        int time = 0;
+        int compareArrivalTime;
 
         while (readyProcess != null) {
-            thread = new Thread(readyProcess);
-            thread.setPriority(readyProcess.getPriority());
-            if (scheduling.getNumberOfThreads() < 5) {
-                scheduling.addThread(thread);
+            if (readyProcess.getArrivalTime() == time) {
+                Process nextProcess = readyQueue.top();
+                compareArrivalTime = (readyProcess.getArrivalTime() - nextProcess.getArrivalTime());
+                if (compareArrivalTime == 0 || compareArrivalTime < 0) {
+                    readyProcess = checkPriority(threads, readyProcess, readyQueue);
+                } else {
+                    break;
+                }
             }
-            do {
-                scheduling.checkThreads();
-            } while (scheduling.getNumberOfThreads() == 5);
-            readyProcess = readyQueue.dequeue();
+            time++;
         }
 
         try {
@@ -65,5 +69,35 @@ public class Driver {
         for (Pairs resource : resourceList) {
             System.out.println("ID: " + resource.id() + ", Data: " + resource.data());
         }
+    }
+
+    public static Process checkPriority(Threads threads, Process readyProcess, Queue readyQueue) {
+        int comparePriority = (readyProcess.getPriority() - readyQueue.top().getPriority());
+        if (comparePriority < 0) {
+            doProcessing(threads, readyProcess);
+            readyProcess = readyQueue.dequeue();
+        } else if (comparePriority > 0) {
+            System.out.println("Next process has lower priority");
+            Process tempProcess = readyProcess;
+            readyProcess = readyQueue.dequeue();
+            doProcessing(threads, readyProcess);
+            readyProcess = tempProcess;
+        } else {
+            System.out.println("Same priority");
+            doProcessing(threads, readyProcess);
+            readyProcess = readyQueue.dequeue();
+        }
+        return readyProcess;
+    }
+
+    public static void doProcessing(Threads threads, Process readyProcess) {
+        Thread thread = new Thread(readyProcess);
+        thread.setPriority(readyProcess.getPriority());
+        if (threads.getNumberOfThreads() < 5) {
+            threads.addThread(thread);
+        }
+        do {
+            threads.checkThreads();
+        } while (threads.getNumberOfThreads() == 5);
     }
 }

@@ -2,10 +2,10 @@ package controller;
 
 import java.util.ArrayList;
 
-public class Scheduling {
+public class Threads {
     private final ArrayList<Thread> threads;
 
-    public Scheduling() {
+    public Threads() {
         threads = new ArrayList<>();
     }
 

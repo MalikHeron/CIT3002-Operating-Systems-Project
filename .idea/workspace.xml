@@ -3,11 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="805de947-1b32-442b-a3b7-615ed8b3a2d0" name="Changes" comment="updated classes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Driver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/Queue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/Queue.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/Resource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/Resource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/Scheduling.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/Scheduling.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/Process.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/Process.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Scheduling.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/Scheduling.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/Threads.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,8 +47,8 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="Driver" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Driver" />
+    <configuration name="Scheduling" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="main.Scheduling" />
       <module name="CIT3002-Operating Systems Project" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -59,7 +56,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Driver" />
+        <item itemvalue="Application.Scheduling" />
       </list>
     </recent_temporary>
   </component>
@@ -74,7 +71,7 @@
       <workItem from="1667951785371" duration="798000" />
       <workItem from="1668002089571" duration="184000" />
       <workItem from="1668026173788" duration="14718000" />
-      <workItem from="1668094391851" duration="8135000" />
+      <workItem from="1668094391851" duration="12540000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <created>1667951823188</created>
@@ -111,7 +108,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668040418175</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="updated classes">
+      <created>1668103020459</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1668103020459</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
