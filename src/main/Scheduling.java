@@ -94,34 +94,42 @@ public class Scheduling {
     }
 
     public static void doProcessing(Threads threads, Process readyProcess) {
-        boolean lock = false;
+        // Get all performable tasks
         Runnable[] tasks = readyProcess.getTasks();
         // random value between 0 and 3
         int index = random.nextInt(4);
+        boolean lock = false;
 
-        // Check if process should be given mutual exclusion to resource
+        // Check if process should be given mutual exclusion to shared resource
         if (index == 0 || index == 1) {
             System.out.println("Mutual exclusion to shared resource upcoming...");
             lock = true;
         }
 
+        // New thread for process
         Thread thread = new Thread(tasks[index]);
-        thread.setPriority(readyProcess.getPriority());
+
+        // Check if shared resource lock should be locked
         if (lock) {
+            // Allow all currently running process to finish execution
             do {
                 threads.checkThreads();
             } while (threads.getNumberOfThreads() != 0);
+            // Lock system if no processes are running
             if (threads.getNumberOfThreads() == 0) {
                 System.out.println("Shared resource locked.");
                 threads.addThread(thread);
+                // Wait until process is finished
                 do {
                     threads.checkThreads();
                 } while (threads.getNumberOfThreads() == 1);
             }
         } else {
+            // Check if less than 2 process are running
             if (threads.getNumberOfThreads() < 2) {
                 threads.addThread(thread);
             }
+            // Allow a maximum of 2 processes to run at a time
             do {
                 threads.checkThreads();
             } while (threads.getNumberOfThreads() == 2);
