@@ -128,15 +128,15 @@ public class Process {
 
     @Override
     public String toString() {
-        return "Process{" +
-                "processId=" + processId +
-                ", task=" + Arrays.toString(task) +
-                ", priority=" + priority +
-                ", arrivalTime=" + arrivalTime +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", blockedTime=" + blockedTime +
-                ", burstTime=" + burstTime +
-                '}';
+        return "Process {" +
+                "\n\tprocessId = " + processId +
+                "\n\ttask = " + Arrays.toString(task) +
+                "\n\tpriority = " + priority +
+                "\n\tarrivalTime = " + arrivalTime +
+                "\n\tstartTime = " + startTime +
+                "\n\tendTime = " + endTime +
+                "\n\tblockedTime = " + blockedTime +
+                "\n\tburstTime = " + burstTime +
+                "\n}";
     }
 }
