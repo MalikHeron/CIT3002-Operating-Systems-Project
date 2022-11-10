@@ -125,7 +125,7 @@ public class Scheduling {
                 readyProcess = readyQueue.dequeue();
             } else if (comparePriority > 0) {
                 // Next process has the higher priority
-                System.out.println("Next process has lower priority");
+                System.out.println("Next process has lower priority, swapping...");
                 // Create a copy of readyProcess
                 Process tempProcess = readyProcess;
                 // Replace readyProcess with waiting process
