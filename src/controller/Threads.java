@@ -11,7 +11,7 @@ public class Threads {
 
     public void addThread(Thread thread) {
         threads.add(thread);
-        System.out.println("Added thread: " + thread.getName());
+        System.out.println("Added to: " + thread.getName());
         thread.start();
     }
 
@@ -20,6 +20,10 @@ public class Threads {
     }
 
     public void checkThreads() {
-        threads.removeIf(thread -> !thread.isAlive());
+        if (threads.removeIf(thread -> !thread.isAlive())) {
+            for (Thread thread: threads) {
+                System.out.println("Remaining processes are on: " + thread.getName());
+            }
+        }
     }
 }

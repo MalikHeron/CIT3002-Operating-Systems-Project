@@ -3,7 +3,6 @@ package main;
 import controller.Queue;
 import controller.Resource;
 import controller.Threads;
-import models.Pairs;
 import models.Process;
 
 import java.util.ArrayList;
@@ -18,22 +17,22 @@ public class Scheduling {
         ArrayList<Process> processList = new ArrayList<>();
 
         // Create a list of 20 processes
-        for(int processId = 1; processId <= 20; processId++) {
+        for (int processId = 1; processId <= 20; processId++) {
             Process process = new Process(processId, sharedResource);
             processList.add(process);
         }
 
         /*System.out.println("Initial Process List:");
         for (Process process : processList) {
-            System.out.println("Process ID: " + process.getProcessId() + ", Arrival time: " + process.getArrivalTime());
+            System.out.println("Process ID: " + process.getProcessId() + ", Arrival currentTime: " + process.getArrivalTime());
         }*/
 
-        // Sort listing by fastest arrival time using method reference operator
+        // Sort listing by fastest arrival currentTime using method reference operator
         processList.sort(Comparator.comparingInt(Process::getArrivalTime));
 
         /*System.out.println("\nSorted Process List:");
         for (Process process : processList) {
-            System.out.println("Process ID: " + process.getProcessId() + ", Arrival time: " + process.getArrivalTime());
+            System.out.println("Process ID: " + process.getProcessId() + ", AT: " + process.getArrivalTime());
         }*/
 
         // Add process list to the ready queue
@@ -42,26 +41,36 @@ public class Scheduling {
         Threads threads = new Threads();
         Process readyProcess = readyQueue.dequeue();
         Thread thread = new Thread();
-        int time = 0;
+        int currentTime = 0;
+        int endTime = -1;
         int compareArrivalTime;
 
         while (readyProcess != null) {
-            // Check if process has arrived
-            if (readyProcess.getArrivalTime() == time) {
-                // Get waiting process in the ready queue
-                Process waitingProcess = readyQueue.top();
-                // Check if next process arrived before current ready process
-                compareArrivalTime = (readyProcess.getArrivalTime() - waitingProcess.getArrivalTime());
-                if (compareArrivalTime == 0 || compareArrivalTime < 0) {
-                    // Arrivals times are the same or ready process arrived before waiting
-                    readyProcess = checkPriority(threads, readyProcess, readyQueue);
-                } else {
-                    // No more processes remain
-                    break;
+            System.out.println("Current time: " + currentTime);
+            if (currentTime > endTime) {
+                // Check if process has arrived
+                if (readyProcess.getArrivalTime() <= currentTime) {
+                    System.out.println("\nArrival time: " + readyProcess.getArrivalTime());
+                    // Get waiting process in the ready queue
+                    Process waitingProcess = readyQueue.top();
+                    // Check if next process arrived before current ready process
+                    compareArrivalTime = (readyProcess.getArrivalTime() - waitingProcess.getArrivalTime());
+
+                    if ((compareArrivalTime == 0 || compareArrivalTime < 0)) {
+                        // Arrivals times are the same or ready process arrived before waiting
+                        Object[] objects = checkPriority(threads, readyProcess, readyQueue, compareArrivalTime);
+                        readyProcess = (Process) objects[0];
+                        endTime = currentTime + (int) objects[1];
+                        System.out.println("End time: " + endTime + "\n");
+                    } else {
+                        // Do last process
+                        doProcessing(threads, readyProcess);
+                        break;
+                    }
                 }
             }
-            // Increase time
-            time++;
+            // Increase currentTime
+            currentTime++;
         }
 
         try {
@@ -72,35 +81,54 @@ public class Scheduling {
         }
 
         // Get list of resources
-        ArrayList<Pairs> resourceList = sharedResource.getResourceList();
+        /*ArrayList<Pairs> resourceList = sharedResource.getResourceList();
 
         System.out.println("\nFinished Resource List:");
         for (Pairs resource : resourceList) {
             System.out.println("ID: " + resource.id() + ", Data: " + resource.data());
+        }*/
+
+        // Sort listing by fastest start time using method reference operator
+        System.out.println("\nProcess List:");
+        for (Process process : processList) {
+            System.out.println("PROCESS ID: " + process.getProcessId() + ", PRIORITY: " + process.getPriority() +
+                    ", ARRIVAL TIME: " + process.getArrivalTime() + ", BURST TIME: " + process.getBurstTime() +
+                    ", BLOCKED TIME: " + process.getBlockedTime());
         }
     }
 
-    public static Process checkPriority(Threads threads, Process readyProcess, Queue readyQueue) {
+    public static Object[] checkPriority(Threads threads, Process readyProcess, Queue readyQueue, int arrivalTime) {
         // Check if ready process has the higher
         int comparePriority = (readyProcess.getPriority() - readyQueue.top().getPriority());
-        if (comparePriority < 0) {
-            // Ready process has the higher priority
+        int burstTime = 0;
+        if (arrivalTime < 0) {
+            // Ready process arrived first
             doProcessing(threads, readyProcess);
+            burstTime = readyProcess.getBurstTime();
             readyProcess = readyQueue.dequeue();
-        } else if (comparePriority > 0) {
-            // Next process has the higher priority
-            System.out.println("Next process has lower priority");
-            Process tempProcess = readyProcess;
-            readyProcess = readyQueue.dequeue();
-            doProcessing(threads, readyProcess);
-            readyProcess = tempProcess;
         } else {
-            // Priorities are the same
-            System.out.println("Same priority");
-            doProcessing(threads, readyProcess);
-            readyProcess = readyQueue.dequeue();
+            if (comparePriority < 0) {
+                // Ready process has the higher priority
+                doProcessing(threads, readyProcess);
+                burstTime = readyProcess.getBurstTime();
+                readyProcess = readyQueue.dequeue();
+            } else if (comparePriority > 0) {
+                // Next process has the higher priority
+                System.out.println("Next process has lower priority");
+                Process tempProcess = readyProcess;
+                readyProcess = readyQueue.dequeue();
+                doProcessing(threads, readyProcess);
+                burstTime = readyProcess.getBurstTime();
+                readyProcess = tempProcess;
+            } else {
+                // Priorities are the same
+                System.out.println("Same priority");
+                doProcessing(threads, readyProcess);
+                burstTime = readyProcess.getBurstTime();
+                readyProcess = readyQueue.dequeue();
+            }
         }
-        return readyProcess;
+        return new Object[]{readyProcess, burstTime};
     }
 
     public static void doProcessing(Threads threads, Process readyProcess) {
@@ -110,25 +138,32 @@ public class Scheduling {
         int index = random.nextInt(4);
         boolean lock = false;
 
-        // Check if process should be given mutual exclusion to shared resource
         if (index == 0 || index == 1) {
+            // Check if process should be given mutual exclusion to shared resource
             System.out.println("Mutual exclusion to shared resource upcoming...");
             lock = true;
         }
 
         // New thread for process
         Thread thread = new Thread(tasks[index]);
-
         // Check if shared resource lock should be locked
         if (lock) {
+            int blockedTime = 0;
+            System.out.println("Waiting on processes to finish...");
             // Allow all currently running process to finish execution
             do {
+                blockedTime++;
                 threads.checkThreads();
             } while (threads.getNumberOfThreads() != 0);
+            System.out.println("Processes finished.");
+            System.out.println("Blocked time: " + blockedTime);
+            readyProcess.setBlockedTime(blockedTime);
             // Lock system if no processes are running
             if (threads.getNumberOfThreads() == 0) {
                 System.out.println("Shared resource locked.");
+                System.out.println(readyProcess);
                 threads.addThread(thread);
+                System.out.println("Processing...");
                 // Wait until process is finished
                 do {
                     threads.checkThreads();
@@ -137,6 +172,7 @@ public class Scheduling {
         } else {
             // Check if less than 2 process are running
             if (threads.getNumberOfThreads() < 2) {
+                System.out.println(readyProcess);
                 threads.addThread(thread);
             }
             // Allow a maximum of 2 processes to run at a time
