@@ -46,15 +46,21 @@ public class Scheduling {
         int compareArrivalTime;
 
         while (readyProcess != null) {
+            // Check if process has arrived
             if (readyProcess.getArrivalTime() == time) {
-                Process nextProcess = readyQueue.top();
-                compareArrivalTime = (readyProcess.getArrivalTime() - nextProcess.getArrivalTime());
+                // Get waiting process in the ready queue
+                Process waitingProcess = readyQueue.top();
+                // Check if next process arrived before current ready process
+                compareArrivalTime = (readyProcess.getArrivalTime() - waitingProcess.getArrivalTime());
                 if (compareArrivalTime == 0 || compareArrivalTime < 0) {
+                    // Arrivals times are the same or ready process arrived before waiting
                     readyProcess = checkPriority(threads, readyProcess, readyQueue);
                 } else {
+                    // No more processes remain
                     break;
                 }
             }
+            // Increase time
             time++;
         }
 
@@ -75,17 +81,21 @@ public class Scheduling {
     }
 
     public static Process checkPriority(Threads threads, Process readyProcess, Queue readyQueue) {
+        // Check if ready process has the higher
         int comparePriority = (readyProcess.getPriority() - readyQueue.top().getPriority());
         if (comparePriority < 0) {
+            // Ready process has the higher priority
             doProcessing(threads, readyProcess);
             readyProcess = readyQueue.dequeue();
         } else if (comparePriority > 0) {
+            // Next process has the higher priority
             System.out.println("Next process has lower priority");
             Process tempProcess = readyProcess;
             readyProcess = readyQueue.dequeue();
             doProcessing(threads, readyProcess);
             readyProcess = tempProcess;
         } else {
+            // Priorities are the same
             System.out.println("Same priority");
             doProcessing(threads, readyProcess);
             readyProcess = readyQueue.dequeue();
