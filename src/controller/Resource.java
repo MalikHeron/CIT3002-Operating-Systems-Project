@@ -42,7 +42,7 @@ public class Resource {
         System.out.println("ID: " + resource.id() + ", Data: " + resource.data());
     }
 
-    public int getTotalResourceData() {
+    public void calculateTotalResourceData() {
         int index = 0;
         int sum = 0;
 
@@ -51,7 +51,7 @@ public class Resource {
             sum += resource.data();
             index++;
         }
-        return sum;
+        System.out.println("Total resource data: " + sum);
     }
 
     public ArrayList<Pairs> getResourceList() {
