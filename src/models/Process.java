@@ -5,10 +5,10 @@ import controller.Resource;
 import java.util.Arrays;
 import java.util.Random;
 
-public class Process implements Runnable {
+public class Process {
     private final Random random = new Random();
     private int processId;
-    private Runnable[] task;
+    private Runnable[] tasks;
     private int priority;
     private int arrivalTime;
     private long startTime;
@@ -19,7 +19,7 @@ public class Process implements Runnable {
 
     public Process() {
         processId = 0;
-        task = new Runnable[0];
+        tasks = new Runnable[0];
         priority = 0;
         arrivalTime = 0;
         startTime = 0L;
@@ -34,17 +34,17 @@ public class Process implements Runnable {
         setPriority((random.nextInt(5) + 1));
         setArrivalTime(random.nextInt(30));
         setBurstTime((random.nextInt(5) + 1));
-        task = new Runnable[0];
+        tasks = new Runnable[0];
         startTime = 0L;
         endTime = 0L;
         blockedTime = 0.0;
     }
 
-    public Process(int processId, Runnable[] task, int priority, int arrivalTime, long startTime,
+    public Process(int processId, Runnable[] tasks, int priority, int arrivalTime, long startTime,
                    long endTime, double blockedTime, int burstTime, Resource resource) {
         this.resource = resource;
         this.processId = processId;
-        this.task = task;
+        this.tasks = tasks;
         this.priority = priority;
         this.arrivalTime = arrivalTime;
         this.startTime = startTime;
@@ -61,12 +61,8 @@ public class Process implements Runnable {
         this.processId = processId;
     }
 
-    public Runnable[] getTask() {
-        return task;
-    }
-
-    public void setTask(Runnable[] task) {
-        this.task = task;
+    public void setTasks(Runnable[] tasks) {
+        this.tasks = tasks;
     }
 
     public int getPriority() {
@@ -117,27 +113,23 @@ public class Process implements Runnable {
         this.burstTime = burstTime;
     }
 
-    public void runTask(Resource resource) {
-        task = new Runnable[4];
+    public Runnable[] getTasks() {
+        tasks = new Runnable[4];
 
         // initialize array items
-        task[0] = resource::addRecord;
-        task[1] = resource::removeRecord;
-        task[2] = resource::retrieveRecord;
-        task[3] = resource::calculateTotalResourceData;
+        tasks[0] = resource::addRecord;
+        tasks[1] = resource::removeRecord;
+        tasks[2] = resource::retrieveRecord;
+        tasks[3] = resource::calculateTotalResourceData;
 
-        // random value between 0 and 3
-        int index = random.nextInt(4);
-
-        // run the method
-        task[index].run();
+        return tasks;
     }
 
     @Override
     public String toString() {
         return "Process {" +
                 "\n\tprocessId = " + processId +
-                "\n\ttask = " + Arrays.toString(task) +
+                "\n\ttask = " + Arrays.toString(tasks) +
                 "\n\tpriority = " + priority +
                 "\n\tarrivalTime = " + arrivalTime +
                 "\n\tstartTime = " + startTime +
@@ -145,10 +137,5 @@ public class Process implements Runnable {
                 "\n\tblockedTime = " + blockedTime +
                 "\n\tburstTime = " + burstTime +
                 "\n}";
-    }
-
-    @Override
-    public void run() {
-        runTask(resource);
     }
 }

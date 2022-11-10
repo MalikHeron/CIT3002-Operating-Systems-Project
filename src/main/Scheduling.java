@@ -8,10 +8,13 @@ import models.Process;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Random;
 
 public class Scheduling {
+    static Resource sharedResource = new Resource();
+    private static final Random random = new Random();
+
     public static void main(String[] args) {
-        Resource sharedResource = new Resource();
         ArrayList<Process> processList = new ArrayList<>();
 
         // Create a list of 20 processes
@@ -91,13 +94,37 @@ public class Scheduling {
     }
 
     public static void doProcessing(Threads threads, Process readyProcess) {
-        Thread thread = new Thread(readyProcess);
-        thread.setPriority(readyProcess.getPriority());
-        if (threads.getNumberOfThreads() < 5) {
-            threads.addThread(thread);
+        boolean lock = false;
+        Runnable[] tasks = readyProcess.getTasks();
+        // random value between 0 and 3
+        int index = random.nextInt(4);
+
+        // Check if process should be given mutual exclusion to resource
+        if (index == 0 || index == 1) {
+            System.out.println("Mutual exclusion to shared resource upcoming...");
+            lock = true;
         }
-        do {
-            threads.checkThreads();
-        } while (threads.getNumberOfThreads() == 5);
+
+        Thread thread = new Thread(tasks[index]);
+        thread.setPriority(readyProcess.getPriority());
+        if (lock) {
+            do {
+                threads.checkThreads();
+            } while (threads.getNumberOfThreads() != 0);
+            if (threads.getNumberOfThreads() == 0) {
+                System.out.println("Shared resource locked.");
+                threads.addThread(thread);
+                do {
+                    threads.checkThreads();
+                } while (threads.getNumberOfThreads() == 1);
+            }
+        } else {
+            if (threads.getNumberOfThreads() < 2) {
+                threads.addThread(thread);
+            }
+            do {
+                threads.checkThreads();
+            } while (threads.getNumberOfThreads() == 2);
+        }
     }
 }
