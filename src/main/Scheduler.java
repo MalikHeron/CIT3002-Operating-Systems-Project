@@ -77,6 +77,9 @@ public class Scheduler {
                     } else {
                         // Do last process
                         doProcessing(threads, readyProcess);
+                        endTime = currentTime + readyProcess.getBurstTime();
+                        System.out.println("[PROCESS ID: " + readyProcess.getProcessId() +
+                                "] End time: " + endTime + "\n");
                         break;
                     }
                 }
@@ -118,7 +121,7 @@ public class Scheduler {
 
     public static Object[] checkPriority(Threads threads, Process readyProcess, Queue readyQueue, int arrivalTime) {
         // Check if ready process has the higher
-        int comparePriority = (readyProcess.getPriority() - readyQueue.top().getPriority());
+        int comparePriority = readyProcess.getPriority() - readyQueue.top().getPriority();
         int burstTime;
         // Check if processes have different arrival times
         if (arrivalTime < 0) {
@@ -129,17 +132,20 @@ public class Scheduler {
             // Set readyProcess to next process in the ready queue
             readyProcess = readyQueue.dequeue();
         } else {
-            if (comparePriority < 0) {
+            if (comparePriority < 0 || comparePriority == 0) {
+                // Priorities are the same
+                System.out.println("[PROCESS ID: " + readyProcess.getProcessId() +
+                        "] has same or higher priority than [PROCESS ID: " + readyQueue.top().getProcessId() + "]");
                 // Ready process has the higher priority
                 doProcessing(threads, readyProcess);
                 // Get process burst time
                 burstTime = readyProcess.getBurstTime();
                 // Set readyProcess to next process in the ready queue
                 readyProcess = readyQueue.dequeue();
-            } else if (comparePriority > 0) {
+            } else {
                 // Next process has the higher priority
                 System.out.println("[PROCESS ID: " + readyQueue.top().getProcessId() + "] " +
-                        "has higher priority, swapping with [PROCESS ID: " + readyProcess.getProcessId() + "] ...");
+                        "has higher priority, swapping with [PROCESS ID: " + readyProcess.getProcessId() + "]");
                 // Create a copy of readyProcess
                 Process tempProcess = readyProcess;
                 // Replace readyProcess with waiting process
@@ -149,15 +155,6 @@ public class Scheduler {
                 burstTime = readyProcess.getBurstTime();
                 // Set readyProcess to copied process
                 readyProcess = tempProcess;
-            } else {
-                // Priorities are the same
-                System.out.println("[PROCESS ID: " + readyProcess.getProcessId() +
-                        "] has same priority as [PROCESS ID: " + readyQueue.top().getProcessId() + "]");
-                doProcessing(threads, readyProcess);
-                // Get process burst time
-                burstTime = readyProcess.getBurstTime();
-                // Set readyProcess to next process in the ready queue
-                readyProcess = readyQueue.dequeue();
             }
         }
         return new Object[]{readyProcess, burstTime};
@@ -179,7 +176,7 @@ public class Scheduler {
 
         // New thread for process
         Thread thread = new Thread(tasks[index]);
-        // Check if shared resource lock should be locked
+        // Check if shared resource should be locked
         if (lock) {
             int blockedTime = 0;
 
