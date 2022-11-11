@@ -23,20 +23,21 @@ public class Scheduler {
             processList.add(process);
         }
 
-        /*System.out.println("Initial Process List:");
+        System.out.println("Initial Process List:");
         for (Process process : processList) {
             System.out.println("PROCESS ID: " + process.getProcessId() +
                     ", ARRIVAL TIME: " + process.getArrivalTime());
-        }*/
+        }
 
         // Sort list by fastest arrival currentTime using method reference operator
         processList.sort(Comparator.comparingInt(Process::getArrivalTime));
 
-        /*System.out.println("\nSorted Process List:");
+        System.out.println("\nSorted Process List by Arrival Time:");
         for (Process process : processList) {
             System.out.println("PROCESS ID: " + process.getProcessId() +
                     ", ARRIVAL TIME: " + process.getArrivalTime());
-        }*/
+        }
+        System.out.println();
 
         // Add process list to the ready queue
         Queue readyQueue = new Queue(processList);
@@ -60,16 +61,19 @@ public class Scheduler {
                     // Get waiting process in the ready queue
                     Process waitingProcess = readyQueue.top();
                     // Check if next process arrived before current ready process
-                    compareArrivalTime = (readyProcess.getArrivalTime() - waitingProcess.getArrivalTime());
+                    compareArrivalTime = readyProcess.getArrivalTime() - waitingProcess.getArrivalTime();
 
-                    if ((compareArrivalTime == 0 || compareArrivalTime < 0)) {
+                    if (compareArrivalTime == 0 || compareArrivalTime < 0) {
                         // Arrivals times are the same or ready process arrived before waiting
                         Object[] objects = checkPriority(threads, readyProcess, readyQueue, compareArrivalTime);
                         // Calculate end time of process
                         endTime = currentTime + (int) objects[1];
                         System.out.println("[PROCESS ID: " + readyProcess.getProcessId() +
                                 "] End time: " + endTime + "\n");
+                        // Set next ready process
                         readyProcess = (Process) objects[0];
+                        // Set current time to end time
+                        currentTime = endTime;
                     } else {
                         // Do last process
                         doProcessing(threads, readyProcess);
