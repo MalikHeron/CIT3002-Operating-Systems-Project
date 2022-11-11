@@ -29,7 +29,7 @@ public class Scheduler {
                     ", ARRIVAL TIME: " + process.getArrivalTime());
         }
 
-        // Sort list by fastest arrival currentTime using method reference operator
+        // Sort list by fastest arrival time using method reference operator
         processList.sort(Comparator.comparingInt(Process::getArrivalTime));
 
         System.out.println("\nSorted Process List by Arrival Time:");
