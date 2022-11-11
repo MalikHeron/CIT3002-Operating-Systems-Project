@@ -23,20 +23,20 @@ public class Scheduler {
             processList.add(process);
         }
 
-        System.out.println("Initial Process List:");
+        /*System.out.println("Initial Process List:");
         for (Process process : processList) {
             System.out.println("PROCESS ID: " + process.getProcessId() +
                     ", ARRIVAL TIME: " + process.getArrivalTime());
-        }
+        }*/
 
         // Sort list by fastest arrival currentTime using method reference operator
         processList.sort(Comparator.comparingInt(Process::getArrivalTime));
 
-        System.out.println("\nSorted Process List:");
+        /*System.out.println("\nSorted Process List:");
         for (Process process : processList) {
             System.out.println("PROCESS ID: " + process.getProcessId() +
                     ", ARRIVAL TIME: " + process.getArrivalTime());
-        }
+        }*/
 
         // Add process list to the ready queue
         Queue readyQueue = new Queue(processList);
@@ -45,8 +45,6 @@ public class Scheduler {
         Threads threads = new Threads();
         // Get the next process in the ready queue
         Process readyProcess = readyQueue.dequeue();
-        // Initialize a thread
-        Thread thread = new Thread();
 
         int currentTime = 0;
         int endTime = -1;
@@ -57,7 +55,8 @@ public class Scheduler {
             if (currentTime > endTime) {
                 // Check if process has arrived
                 if (readyProcess.getArrivalTime() <= currentTime) {
-                    System.out.println("\nArrival time: " + readyProcess.getArrivalTime());
+                    System.out.println("\n[PROCESS ID: " + readyProcess.getProcessId() +
+                            "] Arrival time: " + readyProcess.getArrivalTime());
                     // Get waiting process in the ready queue
                     Process waitingProcess = readyQueue.top();
                     // Check if next process arrived before current ready process
@@ -66,10 +65,11 @@ public class Scheduler {
                     if ((compareArrivalTime == 0 || compareArrivalTime < 0)) {
                         // Arrivals times are the same or ready process arrived before waiting
                         Object[] objects = checkPriority(threads, readyProcess, readyQueue, compareArrivalTime);
-                        readyProcess = (Process) objects[0];
                         // Calculate end time of process
                         endTime = currentTime + (int) objects[1];
-                        System.out.println("End time: " + endTime + "\n");
+                        System.out.println("[PROCESS ID: " + readyProcess.getProcessId() +
+                                "] End time: " + endTime + "\n");
+                        readyProcess = (Process) objects[0];
                     } else {
                         // Do last process
                         doProcessing(threads, readyProcess);
@@ -81,26 +81,34 @@ public class Scheduler {
             currentTime++;
         }
 
-        try {
-            // Rejoin main thread
-            thread.join();
-        } catch (InterruptedException e) {
-            System.err.println(e.getMessage());
-        }
+        while (true) {
+            // Check if all processes are finished executing
+            threads.checkThreads();
+            // Check if any threads remain
+            if (threads.getNumberOfThreads() == 0) {
+                // Check if queue is empty
+                if (readyQueue.isEmpty()) {
+                    System.out.println("\nAll processes are completed.");
 
-        System.out.println("\nFinished Process List:");
-        for (Process process : processList) {
-            System.out.println("PROCESS ID: " + process.getProcessId() + ", PRIORITY: " + process.getPriority() +
-                    ", ARRIVAL TIME: " + process.getArrivalTime() + ", BURST TIME: " + process.getBurstTime() +
-                    ", BLOCKED TIME: " + process.getBlockedTime());
-        }
+                    // Display finished process list details
+                    System.out.println("\nFinished Process List:");
+                    for (Process process : processList) {
+                        System.out.println("[PROCESS ID: " + process.getProcessId() + "] PRIORITY: " + process.getPriority() +
+                                ", ARRIVAL TIME: " + process.getArrivalTime() + ", BURST TIME: " + process.getBurstTime() +
+                                ", BLOCKED TIME: " + process.getBlockedTime());
+                    }
 
-        // Get list of resources
-        ArrayList<Pairs> resourceList = sharedResource.getResourceList();
+                    // Get list of resources
+                    ArrayList<Pairs> resourceList = sharedResource.getResourceList();
 
-        System.out.println("\nFinal Resource List:");
-        for (Pairs resource : resourceList) {
-            System.out.println("ID: " + resource.id() + ", Data: " + resource.data());
+                    // Display final resource list details
+                    System.out.println("\nFinal Resource List:");
+                    for (Pairs resource : resourceList) {
+                        System.out.println("ID: " + resource.id() + ", Data: " + resource.data());
+                    }
+                    break;
+                }
+            }
         }
     }
 
@@ -126,7 +134,8 @@ public class Scheduler {
                 readyProcess = readyQueue.dequeue();
             } else if (comparePriority > 0) {
                 // Next process has the higher priority
-                System.out.println("Next process has higher priority, swapping...");
+                System.out.println("[PROCESS ID: " + readyQueue.top().getProcessId() + "] " +
+                        "has higher priority, swapping with [PROCESS ID: " + readyProcess.getProcessId() + "] ...");
                 // Create a copy of readyProcess
                 Process tempProcess = readyProcess;
                 // Replace readyProcess with waiting process
@@ -138,7 +147,8 @@ public class Scheduler {
                 readyProcess = tempProcess;
             } else {
                 // Priorities are the same
-                System.out.println("Same priority");
+                System.out.println("[PROCESS ID: " + readyProcess.getProcessId() +
+                        "] has same priority as [PROCESS ID: " + readyQueue.top().getProcessId() + "]");
                 doProcessing(threads, readyProcess);
                 // Get process burst time
                 burstTime = readyProcess.getBurstTime();
@@ -158,7 +168,8 @@ public class Scheduler {
 
         // Check if process should be given mutual exclusion to shared resource
         if (index == 0 || index == 1) {
-            System.out.println("Mutual exclusion to shared resource upcoming...");
+            System.out.println("[PROCESS ID: " + readyProcess.getProcessId() +
+                    "] Will get Mutual exclusion to shared resource.");
             lock = true;
         }
 
@@ -168,27 +179,30 @@ public class Scheduler {
         if (lock) {
             int blockedTime = 0;
 
-            System.out.println("Waiting on processes to finish...");
+            System.out.println("[PROCESS ID: " + readyProcess.getProcessId() +
+                    "] Waiting on processes to finish...");
             // Allow all currently running process to finish execution
             do {
                 blockedTime++;
                 threads.checkThreads();
             } while (threads.getNumberOfThreads() != 0);
 
-            System.out.println("Processes finished.");
-            System.out.println("Blocked time: " + blockedTime);
+            System.out.println("- Processes finished.");
+            System.out.println("[PROCESS ID: " + readyProcess.getProcessId() +
+                    "] Blocked time: " + blockedTime);
 
             // Set process blocked time
             readyProcess.setBlockedTime(blockedTime);
 
             // Lock system if no processes are running
             if (threads.getNumberOfThreads() == 0) {
-                System.out.println("Shared resource locked.");
+                System.out.println("- Shared resource locked.");
                 System.out.println(readyProcess);
                 // Add thread to CPU
                 threads.addThread(thread);
 
-                System.out.println("Processing...");
+                System.out.println("[PROCESS ID: " + readyProcess.getProcessId() +
+                        "] Processing...");
                 // Wait until process is finished
                 do {
                     threads.checkThreads();

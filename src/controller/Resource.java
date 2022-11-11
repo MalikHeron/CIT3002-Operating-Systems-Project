@@ -27,7 +27,7 @@ public class Resource {
         int index = id - 1;
         Pairs resource = new Pairs(id, data);
         resourceList.set(index, resource);
-        System.out.println("Added record: [ID: " + resource.id() + ", Data: " + resource.data() + "]");
+        System.out.println("- Added record: [ID: " + resource.id() + ", Data: " + resource.data() + "]");
     }
 
     public void removeRecord() {
@@ -35,14 +35,14 @@ public class Resource {
         int index = id - 1;
         Pairs resource = new Pairs(id, 0);
         resourceList.set(index, resource);
-        System.out.println("Removed record with ID: [" + resource.id() + "]");
+        System.out.println("- Removed record with ID: [" + resource.id() + "]");
     }
 
     public void retrieveRecord() {
         int id = random.nextInt(20) + 1;
         int index = id - 1;
         Pairs resource = resourceList.get(index);
-        System.out.println("Retrieved record: [ID: " + resource.id() + ", Data: " + resource.data() + "]");
+        System.out.println("- Retrieved record: [ID: " + resource.id() + ", Data: " + resource.data() + "]");
     }
 
     public void calculateTotalResourceData() {
@@ -54,7 +54,7 @@ public class Resource {
             sum += resource.data();
             index++;
         }
-        System.out.println("Total resource data: " + sum);
+        System.out.println("- Total resource data: " + sum);
     }
 
     public ArrayList<Pairs> getResourceList() {
