@@ -77,6 +77,7 @@ public class Scheduler {
                     } else {
                         // Do last process
                         doProcessing(cpu, readyProcess);
+                        // Calculate end time of process
                         endTime = currentTime + readyProcess.getBurstTime();
                         System.out.println("[PROCESS ID: " + readyProcess.getProcessId() +
                                 "] End time: " + endTime + "\n");
