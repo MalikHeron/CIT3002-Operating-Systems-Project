@@ -23,18 +23,20 @@ public class Scheduler {
             processList.add(process);
         }
 
-        /*System.out.println("Initial Process List:");
+        System.out.println("Initial Process List:");
         for (Process process : processList) {
-            System.out.println("Process ID: " + process.getProcessId() + ", Arrival currentTime: " + process.getArrivalTime());
-        }*/
+            System.out.println("PROCESS ID: " + process.getProcessId() +
+                    ", ARRIVAL TIME: " + process.getArrivalTime());
+        }
 
-        // Sort listing by fastest arrival currentTime using method reference operator
+        // Sort list by fastest arrival currentTime using method reference operator
         processList.sort(Comparator.comparingInt(Process::getArrivalTime));
 
-        /*System.out.println("\nSorted Process List:");
+        System.out.println("\nSorted Process List:");
         for (Process process : processList) {
-            System.out.println("Process ID: " + process.getProcessId() + ", AT: " + process.getArrivalTime());
-        }*/
+            System.out.println("PROCESS ID: " + process.getProcessId() +
+                    ", ARRIVAL TIME: " + process.getArrivalTime());
+        }
 
         // Add process list to the ready queue
         Queue readyQueue = new Queue(processList);
@@ -86,8 +88,7 @@ public class Scheduler {
             System.err.println(e.getMessage());
         }
 
-        // Sort listing by fastest start time using method reference operator
-        System.out.println("\nProcess List:");
+        System.out.println("\nFinished Process List:");
         for (Process process : processList) {
             System.out.println("PROCESS ID: " + process.getProcessId() + ", PRIORITY: " + process.getPriority() +
                     ", ARRIVAL TIME: " + process.getArrivalTime() + ", BURST TIME: " + process.getBurstTime() +
@@ -125,7 +126,7 @@ public class Scheduler {
                 readyProcess = readyQueue.dequeue();
             } else if (comparePriority > 0) {
                 // Next process has the higher priority
-                System.out.println("Next process has lower priority, swapping...");
+                System.out.println("Next process has higher priority, swapping...");
                 // Create a copy of readyProcess
                 Process tempProcess = readyProcess;
                 // Replace readyProcess with waiting process
