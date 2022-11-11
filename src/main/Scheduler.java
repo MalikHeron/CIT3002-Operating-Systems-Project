@@ -174,7 +174,7 @@ public class Scheduler {
             lock = true;
         }
 
-        // New thread for process
+        // New thread to start process on
         Thread thread = new Thread(tasks[index]);
         // Check if shared resource should be locked
         if (lock) {
