@@ -3,9 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="805de947-1b32-442b-a3b7-615ed8b3a2d0" name="Changes" comment="updated classes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/CPU.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/CPU.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/Resource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/Resource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Scheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Scheduler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/models/Process.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/Process.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,7 +81,7 @@
       <workItem from="1668164277177" duration="300000" />
       <workItem from="1668180458199" duration="6859000" />
       <workItem from="1668216526776" duration="1242000" />
-      <workItem from="1668248143863" duration="16876000" />
+      <workItem from="1668248143863" duration="17164000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <created>1667951823188</created>
@@ -259,7 +258,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668250246682</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="updated classes">
+      <created>1668265156337</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1668265156337</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

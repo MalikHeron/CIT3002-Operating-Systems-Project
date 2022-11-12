@@ -103,12 +103,11 @@ public class Process {
     @Override
     public String toString() {
         return "Process {" +
-                "\n\tprocessId = " + processId +
-                //"\n\ttask = " + Arrays.toString(tasks) +
-                "\n\tpriority = " + priority +
-                "\n\tarrivalTime = " + arrivalTime +
-                "\n\tblockedTime = " + blockedTime + "ms" +
-                "\n\tburstTime = " + burstTime +
+                "\n\tPID = " + processId +
+                "\n\tPriority = " + priority +
+                "\n\tArrival time = " + arrivalTime +
+                "\n\tBlocked time = " + blockedTime + "ms" +
+                "\n\tBurst time = " + burstTime +
                 "\n}";
     }
 }

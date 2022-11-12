@@ -74,8 +74,9 @@ public class Scheduler {
                         Object[] objects = checkPriority(cpu, readyProcess, readyQueue, compareArrivalTime);
                         // Calculate end time of process
                         endTime = currentTime + (int) objects[2];
-                        Process doneProcess = (Process) objects[1];
-                        System.out.println("[PROCESS ID: " + doneProcess.getProcessId() +
+                        // Get process that was just completed
+                        Process completedProcess = (Process) objects[1];
+                        System.out.println("[PROCESS ID: " + completedProcess.getProcessId() +
                                 "] End time: " + endTime + "\n");
                         // Set next ready process
                         readyProcess = (Process) objects[0];
@@ -129,7 +130,7 @@ public class Scheduler {
         // Check if ready process has the higher priority
         int comparePriority = readyProcess.getPriority() - readyQueue.top().getPriority();
         int burstTime;
-        Process doneProcess;
+        Process completedProcess;
         // Check if processes have different arrival times
         if (arrivalTime < 0) {
             // Ready process arrived first
@@ -137,7 +138,7 @@ public class Scheduler {
             // Get process burst time
             burstTime = readyProcess.getBurstTime();
             // Set done process
-            doneProcess = readyProcess;
+            completedProcess = readyProcess;
             // Set readyProcess to next process in the ready queue
             readyProcess = readyQueue.dequeue();
         } else {
@@ -150,7 +151,7 @@ public class Scheduler {
                 // Get process burst time
                 burstTime = readyProcess.getBurstTime();
                 // Set done process
-                doneProcess = readyProcess;
+                completedProcess = readyProcess;
                 // Set readyProcess to next process in the ready queue
                 readyProcess = readyQueue.dequeue();
             } else {
@@ -164,13 +165,13 @@ public class Scheduler {
                 doProcessing(cpu, readyProcess);
                 // Get process burst time
                 // Set done process
-                doneProcess = readyProcess;
+                completedProcess = readyProcess;
                 burstTime = readyProcess.getBurstTime();
                 // Set readyProcess to copied process
                 readyProcess = tempProcess;
             }
         }
-        return new Object[]{readyProcess, doneProcess, burstTime};
+        return new Object[]{readyProcess, completedProcess, burstTime};
     }
 
     public static void doProcessing(CPU cpu, Process readyProcess) {
