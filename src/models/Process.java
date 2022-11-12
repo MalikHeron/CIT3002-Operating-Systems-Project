@@ -107,7 +107,7 @@ public class Process {
                 //"\n\ttask = " + Arrays.toString(tasks) +
                 "\n\tpriority = " + priority +
                 "\n\tarrivalTime = " + arrivalTime +
-                "\n\tblockedTime = " + blockedTime +
+                "\n\tblockedTime = " + blockedTime + "ms" +
                 "\n\tburstTime = " + burstTime +
                 "\n}";
     }
