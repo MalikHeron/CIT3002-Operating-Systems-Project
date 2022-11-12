@@ -4,32 +4,59 @@ import java.util.ArrayList;
 
 public class CPU {
     private final ArrayList<Thread> cores;
-    int coreNumber;
+    private final Thread defaultThread;
 
     public CPU() {
-        cores = new ArrayList<>();
-        coreNumber = 0;
+        cores = new ArrayList<>(2);
+        // defaultThread properties
+        defaultThread = new Thread();
+        defaultThread.setName("default");
+        // Add two cores to CPU
+        cores.add(defaultThread);
+        cores.add(defaultThread);
     }
 
-    public int getCoreNumber(Thread process) {
+    private int getCoreNumber(Thread process) {
         return cores.indexOf(process) + 1;
     }
 
     public void addProcess(Thread process) {
-        cores.add(process);
-        System.out.println("-> Running on core " + getCoreNumber(process));
+        int index = 0;
+        for (Thread thread : cores) {
+            if (thread.getName().equals("default")) {
+                index = cores.indexOf(thread);
+                break;
+            }
+        }
+        cores.set(index, process);
+        System.out.println(process.getName() + " Assigned to CORE " + getCoreNumber(process));
         process.start();
     }
 
     public int getNumberOfProcesses() {
-        return cores.size();
-    }
-
-    public void checkCPUs() {
-        if (cores.removeIf(process -> !process.isAlive())) {
-            for (Thread process : cores) {
-                System.out.println("-> A process is running on core " + getCoreNumber(process));
+        int processCount = 0;
+        if (checkCPUs()) {
+            for (Thread thread : cores) {
+                if (!thread.getName().equals("default")) {
+                    if (thread.isAlive()) {
+                        processCount++;
+                    }
+                }
             }
         }
+        return processCount;
+    }
+
+    private boolean checkCPUs() {
+        for (Thread process : cores) {
+            if (!process.getName().equals("default")) {
+                if (!process.isAlive()) {
+                    int index = cores.indexOf(process);
+                    System.out.println(process.getName() + " Finished executing on CORE " + (index + 1) + ".");
+                    cores.set(index, defaultThread);
+                }
+            }
+        }
+        return true;
     }
 }

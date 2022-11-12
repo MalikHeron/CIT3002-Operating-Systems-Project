@@ -73,8 +73,9 @@ public class Scheduler {
                         // Arrivals times are the same or ready process arrived before waiting
                         Object[] objects = checkPriority(cpu, readyProcess, readyQueue, compareArrivalTime);
                         // Calculate end time of process
-                        endTime = currentTime + (int) objects[1];
-                        System.out.println("[PROCESS ID: " + readyProcess.getProcessId() +
+                        endTime = currentTime + (int) objects[2];
+                        Process doneProcess = (Process) objects[1];
+                        System.out.println("[PROCESS ID: " + doneProcess.getProcessId() +
                                 "] End time: " + endTime + "\n");
                         // Set next ready process
                         readyProcess = (Process) objects[0];
@@ -96,8 +97,6 @@ public class Scheduler {
         }
 
         while (true) {
-            // Check if all processes are finished executing
-            cpu.checkCPUs();
             // Check if any processes remain
             if (cpu.getNumberOfProcesses() == 0) {
                 // Check if queue is empty
@@ -130,12 +129,15 @@ public class Scheduler {
         // Check if ready process has the higher priority
         int comparePriority = readyProcess.getPriority() - readyQueue.top().getPriority();
         int burstTime;
+        Process doneProcess;
         // Check if processes have different arrival times
         if (arrivalTime < 0) {
             // Ready process arrived first
             doProcessing(cpu, readyProcess);
             // Get process burst time
             burstTime = readyProcess.getBurstTime();
+            // Set done process
+            doneProcess = readyProcess;
             // Set readyProcess to next process in the ready queue
             readyProcess = readyQueue.dequeue();
         } else {
@@ -147,6 +149,8 @@ public class Scheduler {
                 doProcessing(cpu, readyProcess);
                 // Get process burst time
                 burstTime = readyProcess.getBurstTime();
+                // Set done process
+                doneProcess = readyProcess;
                 // Set readyProcess to next process in the ready queue
                 readyProcess = readyQueue.dequeue();
             } else {
@@ -159,12 +163,14 @@ public class Scheduler {
                 readyProcess = readyQueue.dequeue();
                 doProcessing(cpu, readyProcess);
                 // Get process burst time
+                // Set done process
+                doneProcess = readyProcess;
                 burstTime = readyProcess.getBurstTime();
                 // Set readyProcess to copied process
                 readyProcess = tempProcess;
             }
         }
-        return new Object[]{readyProcess, burstTime};
+        return new Object[]{readyProcess, doneProcess, burstTime};
     }
 
     public static void doProcessing(CPU cpu, Process readyProcess) {
@@ -173,6 +179,7 @@ public class Scheduler {
         // random value between 0 and 3
         int index = random.nextInt(4);
         boolean lock = false;
+        int numProcesses;
 
         // Check if process should be given mutual exclusion to shared resource
         if (index == 0 || index == 1) {
@@ -183,6 +190,7 @@ public class Scheduler {
 
         // New process
         Thread process = new Thread(tasks[index]);
+        process.setName("[PROCESS ID: " + readyProcess.getProcessId() + "]");
         // Check if shared resource should be locked
         if (lock) {
             // Get current system time
@@ -191,8 +199,9 @@ public class Scheduler {
                     "] Waiting on processes to finish...");
             // Allow all currently running processes to finish execution
             do {
-                cpu.checkCPUs();
-            } while (cpu.getNumberOfProcesses() != 0);
+                numProcesses = cpu.getNumberOfProcesses();
+            } while (numProcesses != 0);
+
             // Get current system time
             long endTime = Calendar.getInstance().getTimeInMillis();
             // Calculate blocked time
@@ -212,12 +221,10 @@ public class Scheduler {
                 // Add process to CPU
                 cpu.addProcess(process);
 
-                System.out.println("[PROCESS ID: " + readyProcess.getProcessId() +
-                        "] Processing...");
                 // Wait until process is finished
                 do {
-                    cpu.checkCPUs();
-                } while (cpu.getNumberOfProcesses() == 1);
+                    numProcesses = cpu.getNumberOfProcesses();
+                } while (numProcesses >= 1);
             }
         } else {
             // Check if less than 2 process are running
@@ -227,8 +234,8 @@ public class Scheduler {
             }
             // Allow a maximum of 2 processes to run at a time
             do {
-                cpu.checkCPUs();
-            } while (cpu.getNumberOfProcesses() == 2);
+                numProcesses = cpu.getNumberOfProcesses();
+            } while (numProcesses >= 2);
         }
     }
 }
