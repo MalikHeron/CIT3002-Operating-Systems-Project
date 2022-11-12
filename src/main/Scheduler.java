@@ -18,13 +18,18 @@ public class Scheduler {
     public static void main(String[] args) {
         ArrayList<Process> processList = new ArrayList<>();
 
+        System.out.println("Initial Resource List:");
+        for (Pairs resource : sharedResource.getResourceList()) {
+            System.out.println("ID: " + resource.id() + ", Data: " + resource.data());
+        }
+
         // Create a list of 20 processes
         for (int processId = 1; processId <= 20; processId++) {
             Process process = new Process(processId, sharedResource);
             processList.add(process);
         }
 
-        System.out.println("Initial Process List:");
+        System.out.println("\nInitial Process List:");
         for (Process process : processList) {
             System.out.println("PROCESS ID: " + process.getProcessId() +
                     ", ARRIVAL TIME: " + process.getArrivalTime());
@@ -33,7 +38,7 @@ public class Scheduler {
         // Sort list by fastest arrival time using method reference operator
         processList.sort(Comparator.comparingInt(Process::getArrivalTime));
 
-        System.out.println("\nSorted Process List by Arrival Time:");
+        System.out.println("\nProcess List sorted by Arrival Time:");
         for (Process process : processList) {
             System.out.println("PROCESS ID: " + process.getProcessId() +
                     ", ARRIVAL TIME: " + process.getArrivalTime());
