@@ -9,7 +9,7 @@ public class Process {
     private Runnable[] tasks;
     private int priority;
     private int arrivalTime;
-    private int blockedTime;
+    private long blockedTime;
     private int burstTime;
     private Resource resource;
 
@@ -84,11 +84,11 @@ public class Process {
         this.arrivalTime = arrivalTime;
     }
 
-    public int getBlockedTime() {
+    public long getBlockedTime() {
         return blockedTime;
     }
 
-    public void setBlockedTime(int blockedTime) {
+    public void setBlockedTime(long blockedTime) {
         this.blockedTime = blockedTime;
     }
 

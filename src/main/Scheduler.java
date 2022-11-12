@@ -7,6 +7,7 @@ import models.Pairs;
 import models.Process;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Random;
 
@@ -103,7 +104,7 @@ public class Scheduler {
                     for (Process process : processList) {
                         System.out.println("[PROCESS ID: " + process.getProcessId() + "] PRIORITY: " + process.getPriority() +
                                 ", ARRIVAL TIME: " + process.getArrivalTime() + ", BURST TIME: " + process.getBurstTime() +
-                                ", BLOCKED TIME: " + process.getBlockedTime());
+                                ", BLOCKED TIME: " + process.getBlockedTime() + "ms");
                     }
 
                     // Get list of resources
@@ -179,19 +180,22 @@ public class Scheduler {
         Thread process = new Thread(tasks[index]);
         // Check if shared resource should be locked
         if (lock) {
-            int blockedTime = 0;
-
+            // Get current system time
+            long startTime = Calendar.getInstance().getTimeInMillis();
             System.out.println("[PROCESS ID: " + readyProcess.getProcessId() +
                     "] Waiting on processes to finish...");
             // Allow all currently running processes to finish execution
             do {
-                blockedTime++;
                 cpu.checkCPUs();
             } while (cpu.getNumberOfProcesses() != 0);
+            // Get current system time
+            long endTime = Calendar.getInstance().getTimeInMillis();
+            // Calculate blocked time
+            long blockedTime = endTime - startTime;
 
             System.out.println("- Processes finished.");
             System.out.println("[PROCESS ID: " + readyProcess.getProcessId() +
-                    "] Blocked time: " + blockedTime);
+                    "] Blocked time: " + blockedTime + "ms");
 
             // Set process blocked time
             readyProcess.setBlockedTime(blockedTime);
