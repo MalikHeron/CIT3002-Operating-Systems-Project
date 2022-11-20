@@ -137,7 +137,7 @@ public class Scheduler {
             doProcessing(cpu, readyProcess);
             // Get process burst time
             burstTime = readyProcess.getBurstTime();
-            // Set done process
+            // Set completed process
             completedProcess = readyProcess;
             // Set readyProcess to next process in the ready queue
             readyProcess = readyQueue.dequeue();
@@ -150,7 +150,7 @@ public class Scheduler {
                 doProcessing(cpu, readyProcess);
                 // Get process burst time
                 burstTime = readyProcess.getBurstTime();
-                // Set done process
+                // Set completed process
                 completedProcess = readyProcess;
                 // Set readyProcess to next process in the ready queue
                 readyProcess = readyQueue.dequeue();
@@ -162,11 +162,12 @@ public class Scheduler {
                 Process tempProcess = readyProcess;
                 // Replace readyProcess with waiting process
                 readyProcess = readyQueue.dequeue();
+                // Processes swapped, do processing
                 doProcessing(cpu, readyProcess);
                 // Get process burst time
-                // Set done process
-                completedProcess = readyProcess;
                 burstTime = readyProcess.getBurstTime();
+                // Set completed process
+                completedProcess = readyProcess;
                 // Set readyProcess to copied process
                 readyProcess = tempProcess;
             }

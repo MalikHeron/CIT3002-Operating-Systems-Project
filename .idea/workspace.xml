@@ -4,7 +4,6 @@
     <list default="true" id="805de947-1b32-442b-a3b7-615ed8b3a2d0" name="Changes" comment="updated classes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Scheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Scheduler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/Process.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/Process.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,16 +31,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/malik/IdeaProjects/CIT3002-Operating Systems Project",
-    "nodejs_package_manager_path": "npm"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/malik/IdeaProjects/CIT3002-Operating Systems Project&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\malik\IdeaProjects\CIT3002-Operating Systems Project" />
@@ -81,7 +80,9 @@
       <workItem from="1668164277177" duration="300000" />
       <workItem from="1668180458199" duration="6859000" />
       <workItem from="1668216526776" duration="1242000" />
-      <workItem from="1668248143863" duration="17164000" />
+      <workItem from="1668248143863" duration="17714000" />
+      <workItem from="1668293683435" duration="2365000" />
+      <workItem from="1668631608377" duration="37000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <created>1667951823188</created>
@@ -265,7 +266,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668265156337</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="updated classes">
+      <created>1668265445989</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1668265445989</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
